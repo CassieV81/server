@@ -9,20 +9,20 @@ const dbPath = join(__dirname, '..', 'db', 'todo.db');
 const db = new sqlite3.Database(dbPath);
 const router = express.Router();
 
-let todos = [];
-db.all('SELECT * FROM todos', (err, rows) => {
-    if (err) {
-        return res.status(500).json({ message: 'Failed to retrieve todos', error: err.message });
-    };
-    todos = rows;
-});
-
 router.get('/', (req, res) => {
     db.all('SELECT * FROM todos', (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Failed to retrieve todos', error: err.message });
         };
-        return res.status(200).json(rows);
+        const todos = rows.map(todo => {
+            return {
+                id: todo.id,
+                title: todo.title,
+                completed: !!todo.completed
+            };
+        });
+    
+        return res.status(200).json(todos);
     });
 })
 
@@ -32,6 +32,11 @@ router.get('/:id', (req, res) => {
         if (err) {
             return res.status(404).json({ error: err.message });
         }
+        row = {
+            id: todo.id,
+            title: todo.title,
+            completed: !!todo.completed 
+        };
         return res.status(201).json(row);
     });
 })
@@ -53,7 +58,15 @@ router.post('/', (req, res) => {
             if (err) {
                 return res.status(500).json({ message: 'Failed to retrieve todos', error: err.message });
             };
-            return res.status(200).json(rows);
+            const todos = rows.map(todo => {
+            return {
+                id: todo.id,
+                title: todo.title,
+                completed: !!todo.completed 
+            };
+        });
+
+        return res.status(200).json(todos);
         });
     });
 });
@@ -73,7 +86,15 @@ router.put('/:id', (req, res) => {
             if (err) {
                 return res.status(500).json({ message: 'Failed to retrieve todos', error: err.message });
             };
-            return res.status(200).json(rows);
+            const todos = rows.map(todo => {
+            return {
+                id: todo.id,
+                title: todo.title,
+                completed: !!todo.completed 
+            };
+        });
+
+        return res.status(200).json(todos);
         });
     });
 })
@@ -88,7 +109,15 @@ router.delete('/:id', (req, res) => {
             if (err) {
                 return res.status(500).json({ message: 'Failed to retrieve todos', error: err.message });
             };
-            return res.status(200).json(rows);
+            const todos = rows.map(todo => {
+            return {
+                id: todo.id,
+                title: todo.title,
+                completed: !!todo.completed 
+            };
+        });
+
+        return res.status(200).json(todos);
         });
     });
 })
